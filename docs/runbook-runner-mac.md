@@ -11,6 +11,7 @@ The `sonar` job connects to SonarQube at `http://localhost:9000` on this machine
 - **Port 9000 must be free.** If another SonarQube is already running, stop it first (`docker ps`, then `docker stop <name>`). `setup.sh` checks this and tells you.
 - **Tools:**
   - `git`.
+  - **GnuPG** (`brew install gnupg`). Required: `sonarqube-scan-action@v8` verifies the scanner's signature with `gpg`, and fails with "GPG is not available" without it.
   - Optional: the GitHub CLI (`brew install gh`) to set the secret from the terminal.
 - **Keep the Mac awake:** stop it sleeping while you practise (System Settings → Energy / Battery → prevent automatic sleeping). While the Mac sleeps, the `sonar` job sits in the queue.
 
@@ -70,6 +71,9 @@ You don't need to set `SONAR_HOST_URL`; it's already a repo **variable** (`http:
    ./svc.sh install
    ./svc.sh start
    ```
+
+   - **If `./svc.sh status` shows `- 126`,** the service can't start. That happens when the runner folder is in a macOS-protected location (Desktop, Documents, Downloads, iCloud Drive). Either move the runner to `~/actions-runner` and re-register it, or run it in the foreground with `./run.sh` and keep that Terminal window open.
+   - **After installing new tools (such as `gpg`),** restart the runner (`./svc.sh stop && ./svc.sh start`, or Ctrl+C then `./run.sh`) so it picks up the updated PATH.
 
 6. Refresh **Settings → Actions → Runners**. The runner should show **Idle**.
 
