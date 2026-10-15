@@ -7,6 +7,10 @@ import './index.css'
 // BASE_URL is "/" locally and "/<repo-name>/" on GitHub Pages; the router wants it without the trailing slash.
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 
+useEffect(()=> {
+  const a = 0;
+},[])
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter basename={basename}>
