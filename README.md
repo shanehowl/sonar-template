@@ -20,6 +20,7 @@ push to main ──► quality  (GitHub-hosted)   oxlint → vitest + coverage �
 - **Triggers:** push to `main`, or the manual **Run workflow** button. There is no pull-request trigger, for two reasons:
   - Community Build only analyses one branch.
   - On a public repo, the self-hosted runner must never run code from forks.
+- **Fork pull requests:** dropping the `pull_request` trigger is not enough, because a fork can add its own workflow file. What protects the runner Mac is the repo setting that requires approval for outside contributors. **Never approve workflow runs on fork PRs**: approving runs their code on your Mac.
 - **If the runner Mac is off,** the `sonar` job waits in the queue and nothing deploys.
 
 ## Stack
@@ -69,10 +70,10 @@ SONAR_TOKEN=<token> infra/sonarqube/scan-local.sh
 ## Practice exercises
 
 1. **Break the gate on coverage.** Add an untested file of 20+ lines and push. The `sonar` job fails and `deploy` is skipped. Then revert.
-2. **Break the gate on an issue.** Add a `// TODO` comment or an unused variable and watch the "new issues" condition fail.
+2. **Break the gate on an issue.** Add a `// TODO` comment or a nested ternary (e.g. `const size = a ? 'S' : b ? 'M' : 'L'`) and watch the "new issues" condition fail. (Don't use an unused variable: TypeScript's `noUnusedLocals` fails the build in the `quality` job before SonarQube ever runs.)
 3. **Custom quality gate.** In SonarQube, copy "Sonar way", raise coverage on new code to 90%, assign the new gate to the project, then push again.
 4. **Rotate the token.** Generate a new project analysis token, run `gh secret set SONAR_TOKEN`, re-run the workflow, then revoke the old token.
-5. **Runner offline.** Stop the runner (`cd ~/actions-runner && ./svc.sh stop`), push, watch the job sit in the queue, then start it again (`./svc.sh start`).
+5. **Runner offline.** Stop the runner (press Ctrl+C in the `./run.sh` window, or `cd ~/actions-runner && ./svc.sh stop` if you installed the service), push, watch the job sit in the queue, then start it again (`./run.sh` or `./svc.sh start`).
 6. **Status output.** Replace `sonar.qualitygate.wait` with `SonarSource/sonarqube-quality-gate-action@v1`, and use its `quality-gate-status` output in a later step.
 
 ## Troubleshooting
@@ -93,13 +94,17 @@ SONAR_TOKEN=<token> infra/sonarqube/scan-local.sh
 
 1. **Remove the runner.**
    - In the repo, go to **Settings → Actions → Runners** and remove it.
-   - On the runner Mac, run `cd ~/actions-runner && ./svc.sh stop && ./svc.sh uninstall && ./config.sh remove --token <token from the remove dialog>`.
+   - On the runner Mac, in `~/actions-runner`:
+     - If you used `./run.sh`: press Ctrl+C in its window.
+     - If you installed the service: run `./svc.sh stop` and then `./svc.sh uninstall`.
+     - Either way, then run `./config.sh remove --token <token from the remove dialog>`.
 2. **Revoke the token.**
    - In SonarQube, go to **My Account → Security** and revoke it.
    - Run `gh secret delete SONAR_TOKEN --repo shanehowl/sonar-template`.
 3. **Delete SonarQube.** Run `infra/sonarqube/teardown.sh --wipe`, which deletes the containers and all data.
-4. **Optional:** unpublish Pages (Settings → Pages), or archive or delete the repo.
-5. **Switch accounts back.** On the machine where you used `gh`, run `gh auth switch` to return to your usual account.
+4. **Remove the SonarQube GitHub App.** On GitHub, go to **Settings → Applications → Installed GitHub Apps**, then **Configure → Uninstall**. Then go to **Settings → Developer settings → GitHub Apps → the app → Advanced → Delete GitHub App**.
+5. **Optional:** unpublish Pages (Settings → Pages), or archive or delete the repo.
+6. **Switch accounts back.** On the machine where you used `gh`, run `gh auth switch` to return to your usual account.
 
 ## Moving SonarQube to a cloud VM later
 

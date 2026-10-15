@@ -5,8 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# No pull_request trigger: SonarQube Community Build analyses main only, and the
-# self-hosted runner must never execute code from forks.
+# No pull_request trigger: SonarQube Community Build analyses main only.
+# This alone does not stop fork PRs (a fork can add its own workflow). The runner Mac
+# is protected by "Require approval for all external contributors": never approve fork runs.
 
 permissions:
   contents: read

@@ -68,9 +68,10 @@ cat <<NEXT
 
 SonarQube is running at ${SONAR_URL}
 
-Next steps (docs/runbook-runner-mac.md):
+Next steps (docs/runbook-runner-mac.md, sections 3-5):
   1. Log in as admin / admin and set a new password.
-  2. Create the local project 'sonar-template' and a project analysis token.
-  3. gh secret set SONAR_TOKEN --repo shanehowl/sonar-template
+  2. Import the GitHub repo as a project, and make sure its key matches
+     sonar.projectKey in sonar-project.properties.
+  3. Create a project analysis token and store it: gh secret set SONAR_TOKEN
   4. Register this Mac as a self-hosted runner.
 NEXT

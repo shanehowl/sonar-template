@@ -77,14 +77,14 @@ You don't need to set `SONAR_HOST_URL`; it's already a repo **variable** (`http:
 
 6. Refresh **Settings → Actions → Runners**. The runner should show **Idle**.
 
-## 6. Hand back
+## 6. Check it works
 
-Tell Claude that the runner is Idle and `SONAR_TOKEN` is set. Claude then enables the `sonar` job and runs the end-to-end and failure tests.
+Push any commit to `main`, or use **Actions → CI/CD → Run workflow**. All three jobs should go green, with `QUALITY GATE STATUS: PASSED` in the `sonar` job log.
 
 ## Daily start / stop
 
 ```bash
 infra/sonarqube/setup.sh                 # start (safe to re-run)
 infra/sonarqube/teardown.sh              # stop, keep data
-cd ~/actions-runner && ./svc.sh stop     # stop the runner
+cd ~/actions-runner && ./svc.sh stop     # stop the runner service (or Ctrl+C if you used ./run.sh)
 ```
