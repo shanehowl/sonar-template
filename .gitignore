@@ -1,1 +1,26 @@
+# dependencies & build
+node_modules
+dist
+dist-ssr
+*.local
+
+# test & analysis output
+coverage
+.vitest
+.scannerwork
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# editors / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# secrets / local settings
+infra/sonarqube/.env
 .claude/settings.local.json
+.superpowers/
