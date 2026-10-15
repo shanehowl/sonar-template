@@ -24,3 +24,4 @@ npm-debug.log*
 infra/sonarqube/.env
 .claude/settings.local.json
 .superpowers/
+.playwright-mcp/
