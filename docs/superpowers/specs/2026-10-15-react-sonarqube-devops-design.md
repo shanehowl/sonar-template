@@ -109,7 +109,7 @@ src/
 - `db`: `postgres:17`, with its own named volume and a healthcheck.
 - `.env.example`: Postgres user, password and database name. The real `.env` is gitignored.
 - `setup.sh`, run on the other Mac:
-  1. checks Docker is running and has ≥6 GB of memory;
+  1. checks Docker is running; fails if Docker memory is below 4 GiB and warns below 6 GiB;
   2. handles `vm.max_map_count` (see §6);
   3. runs `docker compose up -d`;
   4. polls `/api/system/status` until `UP`;
@@ -181,7 +181,7 @@ until its checks pass, and records the evidence.
 | Risk | Mitigation |
 |---|---|
 | Elasticsearch bootstrap check fails on Docker Desktop (`vm.max_map_count`) | Phase 2 tests the actual behaviour. Fix: set the sysctl inside Docker Desktop's VM via a privileged one-shot container. Fallback: `SONAR_SEARCH_JAVAADDITIONALOPTS=-Dnode.store.allow_mmap=false` (local use only). |
-| Docker Desktop memory too low → SonarQube OOM | `setup.sh` checks memory ≥6 GB and stops with a clear message |
+| Docker Desktop memory too low → SonarQube OOM | `setup.sh` stops below 4 GiB and warns below 6 GiB, each with a clear message |
 | Self-hosted runner on a public repo runs untrusted code | No `pull_request` trigger; fork-PR approval required; runner registered to this repo only; remove it at teardown |
 | Coverage paths don't resolve (0% coverage) | Repo-relative lcov paths; explicit `reportPaths`; verified in Phase 2 |
 | Sonar job queued forever when the other Mac is offline | Documented: the job waits for a runner; start the runner before pushing, or cancel the run |
