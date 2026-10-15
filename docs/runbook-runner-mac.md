@@ -27,21 +27,23 @@ Wait until it prints `UP`. The first run takes 1–3 minutes while the images do
 ## 3. Secure SonarQube and create the project
 
 1. **Log in.** Open http://localhost:9000 and log in with **admin / admin**. SonarQube makes you choose a new password; store it in your password manager.
-2. **Create the project.** Choose **Create Project → Local project** and enter:
-   - Display name: `sonar-template`
-   - Project key: `sonar-template`
-   - Main branch: `main`
+2. **Connect SonarQube to GitHub.** Go to **Administration → Configuration → General Settings → DevOps Platform Integrations → GitHub → Create configuration**, and choose **Create GitHub App** (the automatic option).
+   - GitHub organization: your GitHub account name, e.g. `shanehowl`.
+   - Configuration name: `github`.
+   - Leave **Also set up GitHub authentication** unticked.
 
-   Then click **Next**.
-3. **Set the new code definition.** Keep **Previous version** (the default), then click **Create project**.
-4. **Skip the setup wizard.** The analysis-method screen offers to walk you through GitHub Actions setup. The repo is already configured, so you only need the token from the next section.
+   On GitHub, create the app and install it on **Only select repositories → `sonar-template`**. Back in SonarQube, click **Check configuration**; it should be green.
+3. **Import the repo.** Choose **Projects → Create Project → Import from GitHub**, select the account and `sonar-template`, then **Import**. Keep **Previous version** as the new code definition and click **Create project**.
+4. **Check the project key.** The analysis-method screen (choose **With GitHub Actions**) shows `sonar.projectKey=...`. It must match `sonar.projectKey` in `sonar-project.properties`; this repo uses `shanehowl_sonar-template_6ecca362-f2b7-422b-b226-51ceb186360b`. If you re-import, update the file to the new key.
+   - Skip the rest of the tutorial. The workflow already exists, and `SONAR_HOST_URL` is already a repo variable.
+   - **Alternative without GitHub:** **Create Project → Local project**, then set its key in `sonar-project.properties`. The pipeline works the same either way.
 
 ## 4. Create the analysis token
 
 Go to **My Account → Security → Generate Tokens** and enter:
 
 - Name: `github-actions-sonar-template`
-- Type: **Project Analysis Token**, Project: `sonar-template`
+- Type: **Project Analysis Token**, Project: the imported `sonar-template` project
 - Expires in: **30 days**
 
 Copy the token straight away; SonarQube only shows it once. Store it as the repo secret:
