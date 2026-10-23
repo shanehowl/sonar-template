@@ -1,6 +1,6 @@
 # sonar-template
 
-A deliberately tiny React app for practising a DevOps pipeline:
+A deliberately tiny React app for practising a DevOps pipeline: 
 **GitHub Actions → SonarQube Community Build (self-hosted) → quality gate → GitHub Pages**.
 
 Live app: https://shanehowl.github.io/sonar-template/
