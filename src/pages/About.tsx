@@ -1,4 +1,10 @@
 export default function About() {
+    let a =1
+  let b = 2
+  if(a == b)console.log('same')
+    else console.log('not same')
+  const doSomething = ()=> {}
+  
   return (
     <>
       <h1>About</h1>
