@@ -3,7 +3,6 @@ export default function About() {
   let b = 2
   if(a == b)console.log('same')
     else console.log('not same')
-  const doSomething = ()=> {}
   
   return (
     <>
